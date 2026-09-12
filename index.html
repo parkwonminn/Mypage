@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>귀여운 포모도로 타이머 🍅</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>">
+</head>
+<body class="mode-focus">
+  <div id="toast" class="toast-msg">🎉 축하합니다! 세션을 완료했어요!</div>
+
+  <main class="app-container">
+    <!-- 상단 헤더 -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon">🍅</span>
+        <span>토마토 타임</span>
+      </div>
+      <div class="header-tools">
+        <button id="soundToggleBtn" class="icon-btn" title="소리 켜기/끄기" aria-label="음소거 토글">
+          🔊
+        </button>
+        <button id="soundTestBtn" class="icon-btn" title="알림음 미리듣기" aria-label="사운드 테스트">
+          🎵
+        </button>
+      </div>
+    </header>
+
+    <!-- 모드 선택 (25분 집중 / 5분 휴식) -->
+    <nav class="mode-tabs" role="tablist">
+      <button id="focusModeBtn" class="mode-btn active" role="tab" aria-selected="true">
+        <span>🔥</span> 집중 (25분)
+      </button>
+      <button id="breakModeBtn" class="mode-btn" role="tab" aria-selected="false">
+        <span>☕</span> 휴식 (5분)
+      </button>
+    </nav>
+
+    <!-- 귀여운 토마토 마스코트 -->
+    <div id="mascot" class="mascot-container idle">
+      <div id="mascotBubble" class="mascot-bubble">오늘도 파이팅! ✨</div>
+      <svg class="mascot-svg" viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="tomaGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#ff7b7b"/>
+            <stop offset="70%" stop-color="#ff4a4a"/>
+            <stop offset="100%" stop-color="#db2d2d"/>
+          </radialGradient>
+          <radialGradient id="mintGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#69f0ae"/>
+            <stop offset="70%" stop-color="#2ecc71"/>
+            <stop offset="100%" stop-color="#25a25a"/>
+          </radialGradient>
+          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#80e27e"/>
+            <stop offset="100%" stop-color="#388e3c"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 꼭지와 잎사귀 -->
+        <g class="leaf">
+          <path d="M76 40 C72 20, 60 12, 45 18 C58 28, 68 35, 74 42 Z" fill="url(#leafGrad)"/>
+          <path d="M84 40 C88 20, 100 12, 115 18 C102 28, 92 35, 86 42 Z" fill="url(#leafGrad)"/>
+          <path d="M80 38 C75 14, 85 8, 80 0 C72 6, 73 18, 77 38 Z" fill="#2e7d32"/>
+          <circle cx="80" cy="38" r="8" fill="#4caf50"/>
+        </g>
+
+        <!-- 토마토 몸체 -->
+        <path id="mascotBody" d="M80 40 C125 40, 148 70, 144 105 C140 138, 110 148, 80 148 C50 148, 20 138, 16 105 C12 70, 35 40, 80 40 Z" fill="url(#tomaGrad)"/>
+
+        <!-- 반짝임 하이라이트 -->
+        <ellipse cx="50" cy="62" rx="14" ry="7" transform="rotate(-30 50 62)" fill="rgba(255,255,255,0.45)"/>
+
+        <!-- 뺨 발그레 (홍조) -->
+        <ellipse class="blush" cx="42" cy="104" rx="9" ry="5" fill="#ff2a6d" opacity="0.4"/>
+        <ellipse class="blush" cx="118" cy="104" rx="9" ry="5" fill="#ff2a6d" opacity="0.4"/>
+
+        <!-- 얼굴 표정 (눈 & 입) -->
+        <g id="mascotFace">
+          <!-- 왼쪽 눈 -->
+          <g class="eye-blink" style="transform-origin: 56px 92px;">
+            <circle class="eye" cx="56" cy="92" r="7.5" fill="#1b1c26"/>
+            <circle cx="53.5" cy="89.5" r="2.8" fill="#ffffff"/>
+            <circle cx="58" cy="94" r="1.2" fill="#ffffff"/>
+          </g>
+
+          <!-- 오른쪽 눈 -->
+          <g class="eye-blink" style="transform-origin: 104px 92px;">
+            <circle class="eye" cx="104" cy="92" r="7.5" fill="#1b1c26"/>
+            <circle cx="101.5" cy="89.5" r="2.8" fill="#ffffff"/>
+            <circle cx="106" cy="94" r="1.2" fill="#ffffff"/>
+          </g>
+
+          <!-- 입 (웃는 입) -->
+          <path id="mascotMouth" d="M72 104 Q80 114 88 104" stroke="#1b1c26" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </g>
+
+        <!-- 집중 모드 시 나타나는 눈부신 반짝이 별 -->
+        <g class="sparkle">
+          <polygon points="128,55 131,61 137,63 131,66 128,72 125,66 119,63 125,61" fill="#ffd166"/>
+          <polygon points="32,68 34,72 38,74 34,76 32,80 30,76 26,74 30,72" fill="#ffd166"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 원형 타이머 뷰 -->
+    <div class="timer-wrapper">
+      <svg class="progress-ring" viewBox="0 0 250 250">
+        <circle class="progress-ring__bg" stroke-width="12" fill="transparent" r="105" cx="125" cy="125" />
+        <circle id="progressRingBar" class="progress-ring__bar" stroke-width="12" stroke-linecap="round" fill="transparent" r="105" cx="125" cy="125" />
+      </svg>
+      <div class="timer-content">
+        <div id="timeDisplay" class="time-display">25:00</div>
+        <div id="modeBadge" class="mode-badge">FOCUS TIME</div>
+      </div>
+    </div>
+
+    <!-- 제어 버튼 (시작, 일시정지, 리셋) -->
+    <div class="controls-group">
+      <button id="resetBtn" class="secondary-btn" title="리셋 (R)" aria-label="타이머 리셋">
+        ↺
+      </button>
+      <button id="mainToggleBtn" class="primary-btn" aria-label="시작/일시정지">
+        <span id="mainBtnIcon">▶</span>
+        <span id="mainBtnText">시작</span>
+      </button>
+      <button id="skipBtn" class="secondary-btn" title="다음 세션으로 건너뛰기" aria-label="건너뛰기">
+        ⏭
+      </button>
+    </div>
+
+    <!-- 오늘 집중 횟수 카드 -->
+    <section class="stats-card">
+      <div class="stats-header">
+        <div class="stats-title">
+          <span>📅</span> 오늘의 집중 완주
+        </div>
+        <div class="stats-count">
+          <span id="todayCount">0</span>
+          <span class="unit">회</span>
+        </div>
+      </div>
+      <div id="tomatoStamps" class="tomato-stamps">
+        <span class="empty-stamps-msg">첫 집중을 완료하고 토마토를 수확해보세요!</span>
+      </div>
+    </section>
+
+    <!-- 하단 유틸리티 (단축키 안내 및 테스트 기능) -->
+    <footer class="footer-bar">
+      <span title="Space: 시작/정지, R: 리셋">⌨ 단축키: Space / R</span>
+      <button id="quickTestBtn" class="quick-test-btn" title="동작 테스트를 위해 타이머를 5초로 맞춥니다">
+        ⚡ 5초 테스트
+      </button>
+    </footer>
+  </main>
+
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
